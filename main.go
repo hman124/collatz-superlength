@@ -60,10 +60,10 @@ func main() {
 		defer f.Close()
 	}
 
-	var resultText string = "NUMBER\tCOUNT\n"
+	var resultText string = "NUMBER,COUNT\n"
 	for i := 0; i < len(superLengthList); i++ {
 		v := superLengthList[i]
-		resultText += fmt.Sprintf("%s\t%s\n", strconv.Itoa(v[0]), strconv.Itoa(v[1]))
+		resultText += fmt.Sprintf("%s,%s\n", strconv.Itoa(v[0]), strconv.Itoa(v[1]))
 	}
 	f.Write([]byte(resultText))
 
