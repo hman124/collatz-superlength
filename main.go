@@ -67,5 +67,5 @@ func main() {
 	}
 	f.Write([]byte(resultText))
 
-	fmt.Println("seems legit")
+	fmt.Println("algorithm finished")
 }
