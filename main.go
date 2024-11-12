@@ -1,11 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"slices"
-	"strconv"
 )
 
 func main() {
@@ -13,17 +12,19 @@ func main() {
 	var superLengthList [][]int = make([][]int, 0)
 	var resultCache map[int]int = make(map[int]int)
 
-	for baseNumber := 1; baseNumber <= 1_000; baseNumber++ {
+	for baseNumber := 1; baseNumber <= 1_000_000; baseNumber++ {
+		fmt.Println(baseNumber)
 		var countList []int = []int{baseNumber}
 		var functionLength int = 1
 		var currentNumber int = baseNumber
 
 		for {
-
+			if baseNumber == 1_000_000 {
+				fmt.Println(currentNumber)
+			}
 			if val, ok := resultCache[currentNumber]; ok {
 				functionLength = val
 			} else {
-
 				startNumber := currentNumber
 				for currentNumber != 1 {
 					if currentNumber%2 == 0 {
@@ -34,6 +35,7 @@ func main() {
 
 					functionLength++
 				}
+
 				resultCache[startNumber] = functionLength
 
 			}
@@ -53,19 +55,35 @@ func main() {
 		superLengthList = append(superLengthList, []int{baseNumber, len(countList)})
 	}
 
-	f, err := os.Create("./result.txt")
+	fmt.Println("finished calculations")
+
+	file, err := os.Create("./result.csv")
 	if err != nil {
-		log.Fatal(err)
-	} else {
-		defer f.Close()
+		return
+	}
+	defer file.Close()
+
+	// Wrap the file in a buffered writer
+	bufferedWriter := bufio.NewWriter(file)
+	defer bufferedWriter.Flush() // Ensure any remaining data is written
+
+	for _, i := range superLengthList {
+		fmt.Fprintf(bufferedWriter, "%d,%d\n", i[0], i[1])
 	}
 
-	var resultText string = "NUMBER,COUNT\n"
-	for i := 0; i < len(superLengthList); i++ {
-		v := superLengthList[i]
-		resultText += fmt.Sprintf("%s,%s\n", strconv.Itoa(v[0]), strconv.Itoa(v[1]))
-	}
-	f.Write([]byte(resultText))
+	// f, err := os.Create("./result.csv")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// } else {
+	// 	defer f.Close()
+	// }
+
+	// var resultText string = "NUMBER,COUNT\n"
+	// for i := 0; i < len(superLengthList); i++ {
+	// 	v := superLengthList[i]
+	// 	resultText += fmt.Sprintf("%s,%s\n", strconv.Itoa(v[0]), strconv.Itoa(v[1]))
+	// }
+	// f.Write([]byte(resultText))
 
 	fmt.Println("algorithm finished")
 }
